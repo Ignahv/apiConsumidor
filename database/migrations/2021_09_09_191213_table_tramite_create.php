@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CrearTramite extends Migration
+class TableTramiteCreate extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,13 @@ class CrearTramite extends Migration
     public function up()
     {
         Schema::create('tramites', function (Blueprint $table) {
-            $table->string('idtramite')->unique();      
+            $table->id();
+            $table->integer('idtramites');
+            $table->string('estado');
+            $table->string('fondo');
+            $table->timestamps();
         });
+        
     }
 
     /**
@@ -25,6 +30,6 @@ class CrearTramite extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('tramites');
     }
 }

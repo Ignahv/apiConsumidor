@@ -22,14 +22,40 @@ class HomeController extends Controller
         
         $items = $tramites['tramites']['items'];
 
-        $hola=[];
         for( $i=0; $i<count($items); $i++){
             
-            $hola[$i] = $items[$i]['id'];
+            $idtramite = $items[$i]['id'];
+            $etapa = $items[$i]['etapas'][0]['estado'];
 
+            $datos = $items[$i]['datos'];
+            if(isset($datos)){
+
+                
+                foreach ($datos as $fondo){
+                    if(isset($fondo['director_fondo'])){
+                        $pp = $fondo['director_fondo'];
+                    }else{
+                        $pp = '0';
+                    }
+                }
+            }else{
+                
+                $datos[$i] = ['null'];
+                $pp = '0';
+            }
+            
+            $value = new Tramite();
+            
+            $value->idtramites = $tramites->$idtramite;
+            $value->etapa = $tramites->$etapa;
+            $value->fondo = $tramites->$pp;
+
+            $value->save();
+            //Tramite::create([$idtramite, $etapa, $pp]);
+           //DB::insert('insert into tramites (idtramite, etapa, fondo)values (?,?,?)', [$idtramite, $etapa, $pp]);
         }
-        
 
-        return response()->json($hola);
+        return response()->json([$idtramite, $etapa, $pp]);
     }
 }
+ 

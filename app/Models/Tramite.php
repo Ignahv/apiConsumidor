@@ -19,7 +19,9 @@ class Tramite extends Model
     *
     */
     protected $fillable =[
-        'idtramite'
+        'idtramites',
+        'estado',
+        'fondo'
     ];
 
 
