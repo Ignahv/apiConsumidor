@@ -21,7 +21,8 @@ class Tramite extends Model
     protected $fillable =[
         'idtramites',
         'estado',
-        'fondo'
+        'fondo',
+        'rbd'
     ];
 
 
