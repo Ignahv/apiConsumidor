@@ -11,36 +11,33 @@ use App\Http\Controllers\Validator;
 
 class HomeController extends Controller
 {
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+
     public function index(Request $request)
     {
         $scrap = "";
         $a = 0;
 
         do {
-
-            $response = Http::get("http://168.121.81.28:8080/backend/api/procesos/1/tramites?token=LCl2o5%vZ5Mb%Q@ZyTZPlxDxUS2Qwrq5&maxResults=1" . $scrap);
-
-            $scrap = $this->scrap($response, $a);
+            $scrap = $this->scrap($scrap, $a);
         } while ($scrap != null);
         
-        return response()->json($scrap, 201);
+        return response()->json("", 201);
     }
 
-    public function scrap($response, $a): string
+    public function scrap($scrap, $a)
     {
+        $response = Http::get("http://168.121.81.28:8080/backend/api/procesos/1/tramites?token=LCl2o5%vZ5Mb%Q@ZyTZPlxDxUS2Qwrq5&maxResults=20" . $scrap);
+
         $tramiteBody = $response->object();
 
-        //$token = $tramiteBody->tramites->nextPageToken->values();
+        $token = collect($tramiteBody->tramites->nextPageToken)->values();
+        $token = str_replace(["[","\"","]"], "", $token);
+
         if ($a == 0) {
-            $token = "&pageToken=NDQ2OA%3D%3D";
+            $nextPage = "&pageToken=" . $token;
             $a = 1;
         } else {
-            $token = null;
+            $nextPage = null;
         }
 
         $responseItem = $tramiteBody->tramites->items;
@@ -64,42 +61,40 @@ class HomeController extends Controller
             }
 
             $this->store($idtramite, $rbd, $etapa, $fondo);
+
         }
 
-        return $token;
+        return $nextPage;
     }
 
     public function store($id, $rbd, $etapa, $fondo)
     {   
         $value = new Tramite();
-            
+     
+        
         $value->idtramites = $id;
         $value->rbd = $rbd;
         $value->estado = $etapa;
         $value->fondo = $fondo;
-
         $value->save();
-    } 
+        
+    }
 
     
-    
-    
-
     /*public function noGet($id)
     {
         $update = Tramite::where('idtramites', $id)->firstOrFail();
 
-        if (!isset($si)) {
+        if (!isset($id)) {
             $update = Tramite::find($update->id);
         } else {
             $update = false;
         }
 
-        return $update->id;
-    } */
-    
-    
-   // {clase($x=null)
+        return $update;
+    }*/
+
+    // {clase($x=null)
     //->&pageToken{$i}}
 }
  

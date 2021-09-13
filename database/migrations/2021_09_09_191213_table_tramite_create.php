@@ -18,6 +18,7 @@ class TableTramiteCreate extends Migration
             $table->integer('idtramites');
             $table->string('estado');
             $table->string('fondo');
+            $table->string('rbd');
             $table->timestamps();
         });
         
