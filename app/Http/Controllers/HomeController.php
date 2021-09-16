@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use App\Models\Tramite;
 use App\Http\Controllers\Validator;
+use App\jobs\ProcessPodcast;
+use App\Http\Controllers\console;
 
 class HomeController extends Controller
 {
@@ -60,10 +62,12 @@ class HomeController extends Controller
                 }
             }
 
-            $this->store($idtramite, $rbd, $etapa, $fondo);
+            $existe = DB::select('select * from tramites where idtramites = :id', ['id' => $idtramite]);
+            if($existe == false){
+                $this->store($idtramite, $rbd, $etapa, $fondo);
+            }
 
         }
-
         return $nextPage;
     }
 
@@ -76,23 +80,22 @@ class HomeController extends Controller
         $value->rbd = $rbd;
         $value->estado = $etapa;
         $value->fondo = $fondo;
+        ProcessPodcast::dispatch($value)->delay(now()->addMinutes(10));
         $value->save();
-        
     }
 
-    
-    /*public function noGet($id)
+    public function noGet($id)
     {
         $update = Tramite::where('idtramites', $id)->firstOrFail();
 
         if (!isset($id)) {
             $update = Tramite::find($update->id);
         } else {
-            $update = false;
+            $update = 0;
         }
 
         return $update;
-    }*/
+    }
 
     // {clase($x=null)
     //->&pageToken{$i}}
