@@ -13,7 +13,7 @@ use App\Http\Controllers\console;
 
 class HomeController extends Controller
 {
-
+    aaaa
     public function index(Request $request)
     {
         $scrap = "";
